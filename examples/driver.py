@@ -1,7 +1,10 @@
-import math
+#!/usr/bin/env python
 
+import math
+import numpy as np
 import matplotlib.pyplot as plt
 from skimage import data, io
+
 
 IMAGE_FILE = ''
 
@@ -35,18 +38,25 @@ def smallest_factors_distance(n):
     return result[int((len(result) / 2) - 1)], result[int(len(result) / 2)]
 
 
-def plot_images(images):
-    if is_square(len(images)):
-        x = y = int(math.sqrt(len(images)))
+def plot_images(images, cmap='gray'):
+    if len(images) < 4:
+        f, ax = plt.subplots(len(images), 1)
+        for index, img in enumerate(images):
+            ax[index, 0].imshow(img, cmap=cmap)
+            ax[index, 0].axis('off')
+        return f, ax
     else:
-        x, y = smallest_factors_distance(len(images))
-    f, ax = plt.subplots(x, y)
-    for index, img in enumerate(images):
-        i = int(index / max(x, y))
-        j = int(math.fmod(index, max(x, y)))
-        ax[i, j].imshow(img, cmap='gray')
-        ax[i, j].axis('off')
-    return f, ax
+        if is_square(len(images)):
+            x = y = int(math.sqrt(len(images)))
+        else:
+            x, y = smallest_factors_distance(len(images))
+        f, ax = plt.subplots(x, y)
+        for index, img in enumerate(images):
+            i = int(index / max(x, y))
+            j = int(math.fmod(index, max(x, y)))
+            ax[i, j].imshow(img, cmap=cmap)
+            ax[i, j].axis('off')
+        return f, ax
 
 
 if __name__ == '__main__':
@@ -62,7 +72,7 @@ if __name__ == '__main__':
         else:
             print('Unknown error reading file!')
             exit()
-    plot_images([data.camera(), data.astronaut(), data.text(), data.chelsea(), data.chelsea(), data.astronaut(),
-                 data.astronaut(), data.chelsea(), data.camera()])
+    #thresh = thresholds.threshold(image, 128)
+    plot_images(data.camera(), data.chelsea())
     plt.tight_layout()
     plt.show()
