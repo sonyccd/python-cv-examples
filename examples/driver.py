@@ -4,7 +4,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage import data, io
-
+import thresholds
 
 IMAGE_FILE = ''
 
@@ -39,11 +39,12 @@ def smallest_factors_distance(n):
 
 
 def plot_images(images, cmap='gray'):
+    assert isinstance(images, list), 'Images must be in a list'
     if len(images) < 4:
-        f, ax = plt.subplots(len(images), 1)
+        f, ax = plt.subplots(1, len(images))
         for index, img in enumerate(images):
-            ax[index, 0].imshow(img, cmap=cmap)
-            ax[index, 0].axis('off')
+            ax[index].imshow(img, cmap=cmap)
+            ax[index].axis('off')
         return f, ax
     else:
         if is_square(len(images)):
@@ -72,7 +73,7 @@ if __name__ == '__main__':
         else:
             print('Unknown error reading file!')
             exit()
-    #thresh = thresholds.threshold(image, 128)
-    plot_images(data.camera(), data.chelsea())
+    thresh = thresholds.threshold(np.copy(image), 128)
+    plot_images([image, thresh])
     plt.tight_layout()
     plt.show()
