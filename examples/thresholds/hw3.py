@@ -38,7 +38,7 @@ def peakiness(img, dist=20):
     print(maxum_indexs, maxum[min_max_index])
 
 
-def iterative_threshold(img):
+def iterative(img):
     t = np.mean(img)
     r1 = img[img > t]
     r2 = img[img < t]
@@ -59,7 +59,7 @@ def iterative_threshold(img):
     return threshold(img, math.ceil(t))
 
 
-def adaptive_threshold(img):
+def adaptive(img):
     img_cp = np.copy(img)
     i, j = img_cp.shape
     hi = math.ceil(i / 2)
@@ -68,10 +68,10 @@ def adaptive_threshold(img):
     top_right = img_cp[0:hi, hj:j]
     bottom_left = img_cp[hi:i, 0:hj]
     bottom_right = img_cp[hi:i, hj:j]
-    iterative_threshold(top_left)
-    iterative_threshold(top_right)
-    iterative_threshold(bottom_left)
-    iterative_threshold(bottom_right)
+    iterative(top_left)
+    iterative(top_right)
+    iterative(bottom_left)
+    iterative(bottom_right)
     return img_cp
 
 

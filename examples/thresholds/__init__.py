@@ -1,1 +1,1 @@
-from .hw3 import peakiness, peak_detect, iterative_threshold, adaptive_threshold, threshold
+from .hw3 import peakiness, peak_detect, iterative, adaptive, threshold
