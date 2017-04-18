@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 
-import math
-import numpy as np
+import filters
 import matplotlib.pyplot as plt
 from skimage import data, io
-import thresholds
-import utils
-import filters
 
 IMAGE_FILE = ''
-
 
 if __name__ == '__main__':
     image = None
@@ -25,5 +20,5 @@ if __name__ == '__main__':
             print('Unknown error reading file!')
             exit()
 
-    plt.imshow(filters.gaussian(image,7,2), cmap='gray')
+    plt.imshow(filters.sobel(image), cmap='gray')
     plt.show()

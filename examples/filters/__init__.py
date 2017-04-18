@@ -1,1 +1,2 @@
-from .smooting import gaussian_eq, gaussian_mask, gaussian
+from .smooting import *
+from .derivatives import *
