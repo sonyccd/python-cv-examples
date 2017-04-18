@@ -20,5 +20,5 @@ if __name__ == '__main__':
             print('Unknown error reading file!')
             exit()
 
-    plt.imshow(filters.sobel(image), cmap='gray')
+    plt.imshow(filters.log(image), cmap='gray')
     plt.show()
