@@ -25,4 +25,5 @@ if __name__ == '__main__':
             print('Unknown error reading file!')
             exit()
 
-    filters.gaussian_mask(3)
+    plt.imshow(filters.gaussian(image,7,2), cmap='gray')
+    plt.show()

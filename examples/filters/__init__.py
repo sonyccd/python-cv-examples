@@ -1,1 +1,1 @@
-from .smooting import gaussian, gaussian_mask
+from .smooting import gaussian_eq, gaussian_mask, gaussian
