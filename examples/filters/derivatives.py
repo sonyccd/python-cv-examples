@@ -20,7 +20,8 @@ def sobel(image):
 def log(image, size=3, sigma=1):
     temp = np.copy(image)
     mask = log_mask(size, sigma)
-    return scipy.signal.convolve2d(temp, mask, boundary='wrap')
+    print(mask)
+    return scipy.signal.convolve2d(temp, mask, mode='same', boundary='wrap')
 
 
 def log_mask(size=3, sigma=1):
