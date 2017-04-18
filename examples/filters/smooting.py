@@ -20,5 +20,5 @@ def gaussian_mask(size, sigma=1):
 
 
 def gaussian_eq(x, y, sigma):
-    return (1 / (math.sqrt(2 * math.pi * math.pow(sigma, 2)))) * math.pow(math.e, -(
+    return (1 / (2 * math.pi * math.pow(sigma, 2))) * math.pow(math.e, -(
         (math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))))
