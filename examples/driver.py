@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from skimage import data, io
 import numpy as np
 
-IMAGE_FILE = '../img/cir.gif'
+IMAGE_FILE = '../img/hw1.jpg'
 
 if __name__ == '__main__':
     image = None
@@ -23,6 +23,5 @@ if __name__ == '__main__':
             print('Unknown error reading file!')
             exit()
 
-    sobel_image = filters.sobel(image)
-    plt.imshow(sobel_image, cmap='gray')
+
     plt.show()
