@@ -18,7 +18,7 @@ def sobel(image):
     convolv_x = scipy.signal.convolve2d(temp, sobel_x)
     convolv_y = scipy.signal.convolve2d(temp, sobel_y)
     filterd = np.hypot(convolv_x, convolv_y)
-    angle = np.arctan(convolv_y/convolv_x)
+    angle = np.arctan(convolv_y / convolv_x)
     return filterd, angle
 
 
@@ -42,13 +42,16 @@ def log_mask(size=3, sigma=1):
     for x, row in enumerate(mask):
         for y, elm in enumerate(row):
             mask[x][y] = log_eq(x, y, sigma)
+    mask = [[0, 0, -1, 0, 0],
+            [0, -1, -2, -1, 0],
+            [-1, -2, 16, -2, -1],
+            [0, -1, -2, -1, 0],
+            [0, 0, -1, 0, 0]]
     return mask
 
 
 def log_eq(x, y, sigma=1):
-    return -(1 / math.pi * math.pow(sigma, 4)) * (
-        1 - (math.pow(x, 2) + math.pow(y, 2)) / 2 * math.pow(sigma, 2)) * math.pow(math.e, -(
-        (math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))))
+    return ((x ** 2 + y ** 2 - 2 * sigma ** 2) / sigma ** 4) * math.pow(math.e, -((x ** 2 + y ** 2) / (2 * sigma ** 2)))
 
 
 def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, thresh_max=0.5, morph_flag=False):
@@ -69,14 +72,14 @@ def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, 
 
     THETA, RHO = cart2pol(X, Y)
 
-    X_step = x[1]-x[0]
-    Y_step = y[1]-y[0]
+    X_step = x[1] - x[0]
+    Y_step = y[1] - y[0]
 
-    fx = numpy.linspace(-L/X_step, L/X_step, len(x))
-    fy = numpy.linspace(-L/Y_step, L/Y_step, len(y))
+    fx = numpy.linspace(-L / X_step, L / X_step, len(x))
+    fy = numpy.linspace(-L / Y_step, L / Y_step, len(y))
 
-    fx_step = fx[1]-fx[0]
-    fy_step = fy[1]-fy[0]
+    fx_step = fx[1] - fx[0]
+    fy_step = fy[1] - fy[0]
 
     FX, FY = numpy.meshgrid(fx_step, fy_step)
 
@@ -87,13 +90,13 @@ def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, 
     sigma = (lpf ** 2) / numpy.log(2)
 
     image_f = fft2(image)
-    image_f = image_f * fftshift(numpy.exp(-(RHO / numpy.sqrt(sigma))**2))
+    image_f = image_f * fftshift(numpy.exp(-(RHO / numpy.sqrt(sigma)) ** 2))
     image_filtered = numpy.real(ifft2(image_f))
 
     # PST kernel construction
 
-    rws = RHO*warp_strength
-    pst_kernel = rws * numpy.arctan(rws) - 0.5*numpy.log(1+(rws**2))
+    rws = RHO * warp_strength
+    pst_kernel = rws * numpy.arctan(rws) - 0.5 * numpy.log(1 + (rws ** 2))
     pst_kernel /= pst_kernel.max()
     pst_kernel *= phase_strength
 

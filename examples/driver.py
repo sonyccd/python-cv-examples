@@ -22,6 +22,7 @@ if __name__ == '__main__':
             print(e)
             print('Unknown error reading file!')
             exit()
-
-
+    log_image = filters.log(image)
+    log_image = np.absolute(log_image)
+    plt.imshow(log_image, cmap='gray')
     plt.show()
