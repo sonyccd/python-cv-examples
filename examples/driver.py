@@ -3,6 +3,7 @@
 import filters
 import matplotlib.pyplot as plt
 from skimage import data, io
+import numpy as np
 
 IMAGE_FILE = '../img/hw1.jpg'
 
@@ -22,5 +23,12 @@ if __name__ == '__main__':
             print('Unknown error reading file!')
             exit()
 
-    plt.imshow(filters.log(image, 9, 1.4), cmap='gray')
+    plt.imshow(filters.gaussian(image, 7, 0.84089642), cmap='gray')
+    xx, yy = np.mgrid[0:image.shape[0], 0:image.shape[1]]
+
+    # create the figure
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    ax.plot_surface(xx, yy, image, rstride=1, cstride=1, cmap=plt.cm.gray,
+                    linewidth=0)
     plt.show()
