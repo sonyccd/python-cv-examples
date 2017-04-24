@@ -44,16 +44,17 @@ def log_mask(size=3, sigma=1):
         for y, elm in enumerate(row):
             mask[x][y] = log_eq(x-shift, y-shift, sigma)
     print(mask)
-    plt.matshow(mask, cmap='Spectral', interpolation='none')
+    plt.matshow(mask, cmap='Spectral', interpolation='spline16')
     plt.figure(2)
     return mask
 
 
-def log_eq(x, y, sigma=2):
-    print(x,y,sigma)
-    a = ((math.pow(x, 2) + math.pow(y, 2) - 2 * math.pow(sigma, 2)) / math.pow(sigma, 4))
-    b = (math.pow(math.e, -((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2)))))
-    return a * b
+def log_eq(x, y, sigma=1):
+    a = (1 / (math.pi * math.pow(sigma, 4)))
+    b = (((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))) - 1)
+    c = (math.pow(math.e, -((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2)))))
+    print(x, y, sigma)
+    return a * b * c
 
 
 def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, thresh_max=0.5, morph_flag=False):
