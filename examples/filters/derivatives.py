@@ -5,6 +5,7 @@ import math
 
 import numpy as np
 import scipy.signal
+import matplotlib.pyplot as plt
 
 
 def sobel(image):
@@ -38,23 +39,21 @@ def log(image, size=3, sigma=1):
 
 def log_mask(size=3, sigma=1):
     mask = np.zeros((size, size))
+    shift = (size - 1) / 2
     for x, row in enumerate(mask):
         for y, elm in enumerate(row):
-            mask[x][y] = log_eq(x, y, sigma)
+            mask[x][y] = log_eq(x-shift, y-shift, sigma)
     print(mask)
-    mask = [[0, 0, -1, 0, 0],
-            [0, -1, -2, -1, 0],
-            [-1, -2, 16, -2, -1],
-            [0, -1, -2, -1, 0],
-            [0, 0, -1, 0, 0]]
+    plt.matshow(mask, cmap='Spectral', interpolation='none')
+    plt.figure(2)
     return mask
 
 
-def log_eq(x, y, sigma=1):
-    print(x, y, sigma)
-    return (1 / (math.pi * math.pow(sigma, 4))) * (
-        ((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))) - 1) * (
-           math.pow(math.e, (((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))) - 1)))
+def log_eq(x, y, sigma=2):
+    print(x,y,sigma)
+    a = ((math.pow(x, 2) + math.pow(y, 2) - 2 * math.pow(sigma, 2)) / math.pow(sigma, 4))
+    b = (math.pow(math.e, -((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2)))))
+    return a * b
 
 
 def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, thresh_max=0.5, morph_flag=False):
