@@ -33,7 +33,6 @@ def scharr(image):
 def log(image, size=3, sigma=1):
     temp = np.copy(image)
     mask = log_mask(size, sigma)
-    print(mask)
     return scipy.signal.convolve2d(temp, mask, mode='same', boundary='wrap')
 
 
@@ -42,6 +41,7 @@ def log_mask(size=3, sigma=1):
     for x, row in enumerate(mask):
         for y, elm in enumerate(row):
             mask[x][y] = log_eq(x, y, sigma)
+    print(mask)
     mask = [[0, 0, -1, 0, 0],
             [0, -1, -2, -1, 0],
             [-1, -2, 16, -2, -1],
@@ -51,7 +51,10 @@ def log_mask(size=3, sigma=1):
 
 
 def log_eq(x, y, sigma=1):
-    return ((x ** 2 + y ** 2 - 2 * sigma ** 2) / sigma ** 4) * math.pow(math.e, -((x ** 2 + y ** 2) / (2 * sigma ** 2)))
+    print(x, y, sigma)
+    return (1 / (math.pi * math.pow(sigma, 4))) * (
+        ((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))) - 1) * (
+           math.pow(math.e, (((math.pow(x, 2) + math.pow(y, 2)) / (2 * math.pow(sigma, 2))) - 1)))
 
 
 def pst(image, lpf=0.5, phase_strength=0.5, warp_strength=0.5, thresh_min=-0.5, thresh_max=0.5, morph_flag=False):
