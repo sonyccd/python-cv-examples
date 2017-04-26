@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-import numpy as np
 import math
+
+import numpy as np
 
 
 # returns indexes
@@ -90,13 +91,44 @@ def dual(img):
     r1_t = iterative(img_r1)[1]
     r2_t = iterative(img_r2)[1]
 
-    mask_r1 = img_cp < r1_t
-    mask_r2 = r1_t <= img_cp <= r2_t
-    mask_r3 = img_cp > r2_t
-    img_cp[mask_r1] = 0
-    img_cp[mask_r2] = 1
-    img_cp[mask_r3] = 2
+    regions = np.copy(img_cp)
+    mask_r1 = regions < r1_t
+    mask_r2a = regions <= r2_t
+    mask_r2b = regions >= r1_t
+    mask_r3 = regions > r2_t
+    regions[mask_r1] = 1
+    regions[mask_r2a] = 2
+    regions[mask_r2b] = 2
+    regions[mask_r3] = 3
 
+    max_i, max_j = regions.shape
+    for i, val_i in enumerate(regions):
+        for j, val_j in enumerate(val_i):
+            if regions[i][j] == 2:
+                if (i > 0 and j > 0) and (i < max_i - 1 and j < max_j - 1):
+                    if regions[i + 1][j + 1] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i + 1][j - 1] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i - 1][j + 1] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i - 1][j - 1] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i + 1][j] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i - 1][j] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i][j - 1] == 1:
+                        img_cp[i][j] = 0
+                        continue
+                    if regions[i][j + 1] == 1:
+                        img_cp[i][j] = 0
 
 
     return img_cp
