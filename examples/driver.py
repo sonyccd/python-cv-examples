@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-import filters
 import matplotlib.pyplot as plt
 from skimage import data, io
 import numpy as np
+
+from examples import thresholds
 
 IMAGE_FILE = '../img/hw1.jpg'
 
@@ -22,7 +23,6 @@ if __name__ == '__main__':
             print(e)
             print('Unknown error reading file!')
             exit()
-    log_image = filters.log(image, size=5, sigma=2)
-    log_image = np.absolute(log_image)
-    plt.imshow(log_image, cmap='gray')
+    thresh = thresholds.dual(image)
+    plt.imshow(thresh, cmap='gray')
     plt.show()

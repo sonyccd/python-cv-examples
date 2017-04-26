@@ -1,1 +1,1 @@
-from .hw3 import peakiness, peak_detect, iterative, adaptive, threshold
+from .automatic import *

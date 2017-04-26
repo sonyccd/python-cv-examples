@@ -39,9 +39,10 @@ def peakiness(img, dist=20):
 
 
 def iterative(img):
-    t = np.mean(img)
-    r1 = img[img > t]
-    r2 = img[img < t]
+    img_cp = np.copy(img)
+    t = np.mean(img_cp)
+    r1 = img_cp[img_cp > t]
+    r2 = img_cp[img_cp < t]
     r1_mean_old = np.mean(r1)
     r2_mean_old = np.mean(r2)
     count = 0
@@ -56,7 +57,7 @@ def iterative(img):
             break
         elif count > 100:
             break
-    return threshold(img, math.ceil(t))
+    return threshold(img_cp, math.ceil(t)), math.ceil(t)
 
 
 def adaptive(img):
@@ -68,10 +69,36 @@ def adaptive(img):
     top_right = img_cp[0:hi, hj:j]
     bottom_left = img_cp[hi:i, 0:hj]
     bottom_right = img_cp[hi:i, hj:j]
-    iterative(top_left)
-    iterative(top_right)
-    iterative(bottom_left)
-    iterative(bottom_right)
+    top_left, t = iterative(top_left)
+    top_right, t = iterative(top_right)
+    bottom_left, t = iterative(bottom_left)
+    bottom_right, t = iterative(bottom_right)
+    return img_cp
+
+
+def dual(img):
+    img_cp = np.copy(img)
+    hist = np.histogram(img_cp.ravel(), 256)[0]
+    min_index, max_index = peak_detect(hist)
+    ret, t = iterative(img_cp)
+    img_r1 = np.copy(img_cp)
+    img_r2 = np.copy(img_cp)
+    mask_r1 = img_r1 >= t
+    mask_r2 = img_r1 < t
+    img_r1[mask_r1] = 0
+    img_r2[mask_r2] = 0
+    r1_t = iterative(img_r1)[1]
+    r2_t = iterative(img_r2)[1]
+
+    mask_r1 = img_cp < r1_t
+    mask_r2 = r1_t <= img_cp <= r2_t
+    mask_r3 = img_cp > r2_t
+    img_cp[mask_r1] = 0
+    img_cp[mask_r2] = 1
+    img_cp[mask_r3] = 2
+
+
+
     return img_cp
 
 
