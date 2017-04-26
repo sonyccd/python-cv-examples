@@ -101,35 +101,62 @@ def dual(img):
     regions[mask_r2b] = 2
     regions[mask_r3] = 3
 
-    max_i, max_j = regions.shape
-    for i, val_i in enumerate(regions):
-        for j, val_j in enumerate(val_i):
-            if regions[i][j] == 2:
-                if (i > 0 and j > 0) and (i < max_i - 1 and j < max_j - 1):
-                    if regions[i + 1][j + 1] == 1:
-                        img_cp[i][j] = 0
-                        continue
+    change = True
+    regions_temp = np.copy(regions)
+    while change:
+        change = False
+        for i, val_i in enumerate(regions):
+            for j, val_j in enumerate(val_i):
+                if regions[i][j] == 2:
+                    try:
+                        if regions[i + 1][j + 1] == 1:
+                            img_cp[i][j] = 0
+                            regions_temp[i][j] = 1
+                            change = True
+                            break
+                    except IndexError:
+                            continue
                     if regions[i + 1][j - 1] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i - 1][j + 1] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i - 1][j - 1] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i + 1][j] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i - 1][j] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i][j - 1] == 1:
                         img_cp[i][j] = 0
-                        continue
+                        regions_temp[i][j] = 1
+                        change = True
+                        break
                     if regions[i][j + 1] == 1:
                         img_cp[i][j] = 0
+                        regions_temp[i][j] = 1
+                        change = True
 
+    for i, val_i in enumerate(regions_temp):
+        for j, val_j in enumerate(val_i):
+            if regions_temp[i][j] == 2:
+                img_cp[i][j] = 1
+            if regions_temp[i][j] == 3:
+                img_cp[i][j] = 0
 
     return img_cp
 
