@@ -30,13 +30,34 @@ def peak_detect(histogram, lookahead=5, min_range=0, max_range=256):
     return minum_index, maxum_index
 
 
-def peakiness(img, dist=20):
-    hist = np.histogram(img.ravel(), 256)[0]
-    maxum_indexs = peak_detect(hist)[1]
-    maxum = np.take(hist, maxum_indexs)
-    print(maxum)
-    min_max_index = np.argpartition(maxum, -4)[-2:]
-    print(maxum_indexs, maxum[min_max_index])
+def peakiness(img, min_dist=20):
+    img_cp = np.copy(img)
+    hist = np.histogram(img_cp.ravel(), 256)[0]
+    min_indexs, max_indexs = peak_detect(hist)
+    max_val = 0
+    max_i = 0
+    for elm in max_indexs:
+        if (hist[elm] > max_val):
+            max_val = hist[elm]
+            max_i = elm
+    for index, elm in enumerate(max_indexs):
+        if abs(max_i - elm) < min_dist:
+            np.delete(max_indexs, index)
+    second_max = 0
+    second_max_i = 0
+    for elm in max_indexs:
+        if second_max < hist[elm] < max_val:
+            second_max = hist[elm]
+            second_max_i = elm
+    g_min = math.inf
+    g_min_i = 0
+    for index in range(min(max_i, second_max_i), max(max_i, second_max_i)):
+        if hist[index] < g_min:
+            g_min = hist[index]
+            g_min_i = index
+    peakiness_val = min(max_val, second_max)/g_min
+    threshold(img_cp, g_min_i)
+    return img_cp
 
 
 def iterative(img):
@@ -79,8 +100,6 @@ def adaptive(img):
 
 def dual(img):
     img_cp = np.copy(img)
-    hist = np.histogram(img_cp.ravel(), 256)[0]
-    min_index, max_index = peak_detect(hist)
     ret, t = iterative(img_cp)
     img_r1 = np.copy(img_cp)
     img_r2 = np.copy(img_cp)
@@ -115,7 +134,7 @@ def dual(img):
                             change = True
                             break
                     except IndexError:
-                            continue
+                        continue
                     if regions[i + 1][j - 1] == 1:
                         img_cp[i][j] = 0
                         regions_temp[i][j] = 1

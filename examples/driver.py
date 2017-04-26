@@ -23,6 +23,6 @@ if __name__ == '__main__':
             print(e)
             print('Unknown error reading file!')
             exit()
-    thresh = thresholds.dual(image)
+    thresh = thresholds.peakiness(image)
     plt.imshow(thresh, cmap='gray')
     plt.show()
